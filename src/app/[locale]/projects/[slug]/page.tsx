@@ -5,8 +5,8 @@ import { hasAsset, urlFor } from '@/sanity/image';
 import { PROJECT_DETAIL_QUERY, PROJECT_SLUGS_QUERY } from '@/sanity/queries';
 import { languageAlternates } from '@/lib/seo';
 import { pick, type ProjectDetail } from '@/sanity/types';
+import { RichText } from '@/components/rich-text';
 import { VideoEmbed } from '@/components/video-embed';
-import { PortableText } from '@portabletext/react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -84,7 +84,7 @@ async function ProjectDetailContent({
 
       {project.description?.[locale as Locale] && (
         <div className="prose max-w-none">
-          <PortableText value={project.description[locale as Locale]!} />
+          <RichText value={project.description[locale as Locale]!} />
         </div>
       )}
 

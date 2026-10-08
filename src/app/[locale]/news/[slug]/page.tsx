@@ -5,7 +5,7 @@ import { hasAsset, urlFor } from '@/sanity/image';
 import { NEWS_DETAIL_QUERY, NEWS_SLUGS_QUERY } from '@/sanity/queries';
 import { languageAlternates } from '@/lib/seo';
 import { pick, type NewsDetail } from '@/sanity/types';
-import { PortableText } from '@portabletext/react';
+import { RichText } from '@/components/rich-text';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -73,7 +73,7 @@ async function NewsDetailContent({
       )}
       {post.body?.[locale as Locale] && (
         <div className="prose max-w-none">
-          <PortableText value={post.body[locale as Locale]!} />
+          <RichText value={post.body[locale as Locale]!} />
         </div>
       )}
     </article>
