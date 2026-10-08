@@ -13,6 +13,9 @@ interface ContactFormProps {
 
 export function ContactForm({ locale, dict, turnstileSiteKey }: ContactFormProps) {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  // 必须等 Turnstile 脚本加载完再渲染小组件 div，
+  // 否则脚本首次扫描页面时小组件不存在，不会初始化
+  const [turnstileReady, setTurnstileReady] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -60,12 +63,25 @@ export function ContactForm({ locale, dict, turnstileSiteKey }: ContactFormProps
         <input name="attachment" type="file" className="w-full text-sm" />
       </div>
 
-      {turnstileSiteKey ? (
-        <>
-          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
-          <div className="cf-turnstile" data-sitekey={turnstileSiteKey} />
-        </>
-      ) : (
+      {turnstileSiteKey && (
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="afterInteractive"
+          onLoad={() => setTurnstileReady(true)}
+        />
+      )}
+
+      {turnstileSiteKey && turnstileReady && (
+        <div className="cf-turnstile" data-sitekey={turnstileSiteKey} />
+      )}
+
+      {turnstileSiteKey && !turnstileReady && (
+        <p className="text-xs text-neutral-400">
+          {locale === 'zh' ? '人机校验加载中…' : 'Loading verification…'}
+        </p>
+      )}
+
+      {!turnstileSiteKey && (
         <p className="text-xs text-neutral-400">
           Turnstile 未配置（NEXT_PUBLIC_TURNSTILE_SITE_KEY），开发模式下跳过人机校验。
         </p>
