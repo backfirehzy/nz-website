@@ -125,7 +125,17 @@ export async function POST(request: Request) {
     }
 
     const fields = { name, email, phone, message, locale, attachment };
-    await Promise.allSettled([sendNotificationEmail(fields), saveToSanity(fields)]);
+    const [emailResult, sanityResult] = await Promise.allSettled([
+      sendNotificationEmail(fields),
+      saveToSanity(fields),
+    ]);
+    // 任一环节失败不阻断用户，但必须在服务端日志中可见
+    if (emailResult.status === 'rejected') {
+      console.error('[contact] 邮件发送失败:', emailResult.reason);
+    }
+    if (sanityResult.status === 'rejected') {
+      console.error('[contact] Sanity 留存失败:', sanityResult.reason);
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
