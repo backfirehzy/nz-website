@@ -54,3 +54,9 @@ export const TEAM_QUERY = groq`
     _id, name, role, photo, bio
   }
 `;
+
+export const SERVICES_QUERY = groq`
+  *[_type == "service"] | order(order asc, _createdAt asc) {
+    _id, name, description, image
+  }
+`;

@@ -20,6 +20,7 @@ export default defineConfig({
             S.documentTypeListItem('project'),
             S.documentTypeListItem('news'),
             S.documentTypeListItem('teamMember'),
+            S.documentTypeListItem('service'),
             // 站点设置为单例：直接打开固定文档，不提供新建入口
             S.listItem()
               .title('Site Settings / 站点设置')

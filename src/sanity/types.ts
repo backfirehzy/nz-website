@@ -50,6 +50,13 @@ export interface TeamMember {
   bio?: LocalizedString;
 }
 
+export interface Service {
+  _id: string;
+  name?: LocalizedString;
+  description?: LocalizedString;
+  image?: SanityImageSource;
+}
+
 export function pick(value: LocalizedString | undefined, locale: Locale): string {
   return value?.[locale] ?? value?.en ?? '';
 }
