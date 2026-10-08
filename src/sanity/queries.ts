@@ -43,3 +43,14 @@ export const PROJECT_SLUGS_QUERY = groq`
 export const NEWS_SLUGS_QUERY = groq`
   *[_type == "news" && defined(slug.current)]{ "slug": slug.current }
 `;
+
+// 站点设置是单例文档（固定 documentId = "siteSettings"）
+export const SITE_SETTINGS_QUERY = groq`
+  *[_type == "siteSettings"][0] { siteTitle, footerText, contactEmail }
+`;
+
+export const TEAM_QUERY = groq`
+  *[_type == "teamMember"] | order(order asc, _createdAt asc) {
+    _id, name, role, photo, bio
+  }
+`;

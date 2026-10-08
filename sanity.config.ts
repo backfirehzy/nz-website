@@ -11,6 +11,24 @@ export default defineConfig({
   projectId,
   dataset,
   basePath: '/studio',
-  plugins: [structureTool()],
+  plugins: [
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title('Content')
+          .items([
+            S.documentTypeListItem('project'),
+            S.documentTypeListItem('news'),
+            S.documentTypeListItem('teamMember'),
+            // 站点设置为单例：直接打开固定文档，不提供新建入口
+            S.listItem()
+              .title('Site Settings / 站点设置')
+              .child(
+                S.document().schemaType('siteSettings').documentId('siteSettings'),
+              ),
+            S.documentTypeListItem('contactSubmission'),
+          ]),
+    }),
+  ],
   schema: { types: schemaTypes },
 });

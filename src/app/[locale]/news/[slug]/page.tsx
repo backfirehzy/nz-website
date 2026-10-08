@@ -1,6 +1,7 @@
 import { isLocale, type Locale } from '@/i18n/config';
 import { sanityFetch } from '@/sanity/client';
 import { isSanityConfigured } from '@/sanity/env';
+import { hasAsset, urlFor } from '@/sanity/image';
 import { NEWS_DETAIL_QUERY, NEWS_SLUGS_QUERY } from '@/sanity/queries';
 import { pick, type NewsDetail } from '@/sanity/types';
 import { PortableText } from '@portabletext/react';
@@ -39,6 +40,14 @@ async function NewsDetailContent({
     <article className="space-y-6">
       <h1 className="text-3xl font-bold">{pick(post.title, locale as Locale)}</h1>
       <time className="text-sm text-neutral-500">{post.publishedAt}</time>
+      {hasAsset(post.cover) && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={urlFor(post.cover).width(1600).url()}
+          alt={pick(post.title, locale as Locale)}
+          className="w-full rounded-lg object-cover"
+        />
+      )}
       {post.body?.[locale as Locale] && (
         <div className="prose max-w-none">
           <PortableText value={post.body[locale as Locale]!} />

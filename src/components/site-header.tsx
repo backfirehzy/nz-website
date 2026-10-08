@@ -4,7 +4,15 @@ import { LanguageSwitcher } from '@/components/language-switcher';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function SiteHeader({
+  locale,
+  dict,
+  siteName,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  siteName: string;
+}) {
   const prefix = localePrefix(locale);
   const links = [
     { href: `${prefix}/projects`, label: dict.nav.projects },
@@ -18,7 +26,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
     <header className="border-b border-neutral-200">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
         <Link href={prefix || '/'} className="text-lg font-bold">
-          Studio Name
+          {siteName}
         </Link>
         <nav className="flex items-center gap-6 text-sm">
           {links.map((link) => (

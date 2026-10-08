@@ -36,6 +36,20 @@ export interface NewsDetail extends NewsListItem {
   body?: LocalizedBlocks;
 }
 
+export interface SiteSettings {
+  siteTitle?: LocalizedString;
+  footerText?: LocalizedString;
+  contactEmail?: string;
+}
+
+export interface TeamMember {
+  _id: string;
+  name?: LocalizedString;
+  role?: LocalizedString;
+  photo?: SanityImageSource;
+  bio?: LocalizedString;
+}
+
 export function pick(value: LocalizedString | undefined, locale: Locale): string {
   return value?.[locale] ?? value?.en ?? '';
 }
