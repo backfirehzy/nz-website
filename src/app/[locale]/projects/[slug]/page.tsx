@@ -1,0 +1,74 @@
+import { isLocale, type Locale } from '@/i18n/config';
+import { sanityFetch } from '@/sanity/client';
+import { isSanityConfigured } from '@/sanity/env';
+import { urlFor } from '@/sanity/image';
+import { PROJECT_DETAIL_QUERY, PROJECT_SLUGS_QUERY } from '@/sanity/queries';
+import { pick, type ProjectDetail } from '@/sanity/types';
+import { VideoEmbed } from '@/components/video-embed';
+import { PortableText } from '@portabletext/react';
+import { notFound } from 'next/navigation';
+
+// 构建时预渲染已发布案例；未配置时返回占位 slug（Cache Components 不允许空数组），
+// 该页面会因查不到数据渲染 404，线上真实 slug 走 App Shell 按需生成。
+export async function generateStaticParams() {
+  if (!isSanityConfigured) return [{ slug: 'placeholder' }];
+  const slugs = await sanityFetch<{ slug: string }[]>(PROJECT_SLUGS_QUERY);
+  return slugs.length > 0 ? slugs.map(({ slug }) => ({ slug })) : [{ slug: 'placeholder' }];
+}
+
+export default async function ProjectDetailPage({
+  params,
+}: PageProps<'/[locale]/projects/[slug]'>) {
+  const { locale, slug } = await params;
+  if (!isLocale(locale) || !isSanityConfigured) notFound();
+
+  const project = await sanityFetch<ProjectDetail | null>(PROJECT_DETAIL_QUERY, { slug });
+  if (!project) notFound();
+
+  const title = pick(project.title, locale as Locale);
+  const details: [string, string | number | undefined][] = [
+    [locale === 'zh' ? '地点' : 'Location', project.location],
+    [locale === 'zh' ? '年份' : 'Year', project.year],
+    [locale === 'zh' ? '面积' : 'Area', project.area],
+  ];
+
+  return (
+    <article className="space-y-8">
+      <h1 className="text-3xl font-bold">{title}</h1>
+
+      <dl className="flex flex-wrap gap-6 text-sm text-neutral-600">
+        {details
+          .filter(([, value]) => value)
+          .map(([label, value]) => (
+            <div key={label}>
+              <dt className="text-neutral-400">{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+      </dl>
+
+      {project.description?.[locale as Locale] && (
+        <div className="prose max-w-none">
+          <PortableText value={project.description[locale as Locale]!} />
+        </div>
+      )}
+
+      {project.gallery && project.gallery.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {project.gallery.map((image, index) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={index}
+              src={urlFor(image).width(1200).url()}
+              alt={`${title} ${index + 1}`}
+              className="w-full rounded-lg object-cover"
+              loading="lazy"
+            />
+          ))}
+        </div>
+      )}
+
+      {project.videoUrl && <VideoEmbed url={project.videoUrl} title={title} />}
+    </article>
+  );
+}
