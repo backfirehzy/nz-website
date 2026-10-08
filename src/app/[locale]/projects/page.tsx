@@ -3,7 +3,7 @@ import { getDictionary } from '@/i18n/dictionaries';
 import { ProjectsGrid, type ProjectCardData } from '@/components/projects-grid';
 import { sanityFetch } from '@/sanity/client';
 import { isSanityConfigured } from '@/sanity/env';
-import { urlFor } from '@/sanity/image';
+import { hasAsset, urlFor } from '@/sanity/image';
 import { PROJECT_LIST_QUERY } from '@/sanity/queries';
 import { pick, type ProjectListItem } from '@/sanity/types';
 import { notFound } from 'next/navigation';
@@ -21,7 +21,7 @@ export default async function ProjectsPage({ params }: PageProps<'/[locale]/proj
     _id: project._id,
     slug: project.slug,
     title: pick(project.title, locale as Locale),
-    coverUrl: project.cover ? urlFor(project.cover).width(800).height(600).url() : null,
+    coverUrl: hasAsset(project.cover) ? urlFor(project.cover).width(800).height(600).url() : null,
     projectType: project.projectType,
     location: project.location,
     year: project.year,

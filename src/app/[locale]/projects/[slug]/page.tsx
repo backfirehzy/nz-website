@@ -1,7 +1,7 @@
 import { isLocale, type Locale } from '@/i18n/config';
 import { sanityFetch } from '@/sanity/client';
 import { isSanityConfigured } from '@/sanity/env';
-import { urlFor } from '@/sanity/image';
+import { hasAsset, urlFor } from '@/sanity/image';
 import { PROJECT_DETAIL_QUERY, PROJECT_SLUGS_QUERY } from '@/sanity/queries';
 import { pick, type ProjectDetail } from '@/sanity/types';
 import { VideoEmbed } from '@/components/video-embed';
@@ -53,9 +53,9 @@ export default async function ProjectDetailPage({
         </div>
       )}
 
-      {project.gallery && project.gallery.length > 0 && (
+      {project.gallery && project.gallery.filter(hasAsset).length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
-          {project.gallery.map((image, index) => (
+          {project.gallery.filter(hasAsset).map((image, index) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               key={index}
