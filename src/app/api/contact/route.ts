@@ -33,7 +33,8 @@ async function sendNotificationEmail(fields: {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_EMAIL_TO;
   if (!apiKey || !to) {
-    console.warn('[contact] Resend 未配置，跳过邮件通知');
+    // 邮件未配置不视为失败：询盘仍会留存到 Sanity，客户可在后台查看
+    console.warn('[contact] Resend 未配置，跳过邮件通知（询盘仍会留存到 Sanity）');
     return;
   }
 
