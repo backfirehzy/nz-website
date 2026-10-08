@@ -1,6 +1,6 @@
 # 技术栈选型
 
-> 状态：**候选方案未拍板**。当前推荐方案 A。
+> 状态：✅ **已拍板：方案 A**（2026-10-08）。
 > 决策依据：客户员工自助编辑（需要可视化 CMS）、免费/低成本托管、交付后少维护。
 
 ## 方案 A：Next.js + Sanity + Vercel（推荐）
@@ -47,4 +47,8 @@
 
 ## 最终拍板
 
-待填：（方案 / 日期 / 参与人）
+**方案 A：Next.js + Sanity + Vercel**（2026-10-08 确认）。
+
+- 完整组合：Next.js (App Router) + TypeScript + Tailwind CSS + Sanity（Studio 嵌入 `/studio`）+ Vercel + Resend + Cloudflare Turnstile。
+- 已知悉 Vercel Hobby 商用条款风险（见上文风险 1），若客户介意可平移至 Cloudflare Pages，不影响其他选型。
+- 方案 B（Astro）存档备查，不再采用。

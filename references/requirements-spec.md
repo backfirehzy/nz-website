@@ -128,6 +128,7 @@
 | 案例字段与筛选 | 已定稿，见 FR-02；数量级不超过 100 个；按项目类型筛选 |
 | 案例视频方案 | 第三方平台链接嵌入（YouTube/Vimeo/Bilibili），不自建托管 |
 | 后台编辑人数 | 不超过 3 人 |
+| 技术栈 | 方案 A：Next.js + TypeScript + Tailwind + Sanity + Vercel + Resend + Turnstile（2026-10-08 拍板，详见 tech-stack.md） |
 
 ## 6. 待定事项
 

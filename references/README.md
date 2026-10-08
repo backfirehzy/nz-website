@@ -5,7 +5,7 @@
 | 文档 | 内容 | 状态 |
 |---|---|---|
 | [requirements-spec.md](requirements-spec.md) | 需求规格说明书：项目范围、已确认的功能/非功能需求、已拍板决策记录 | 持续更新 |
-| [tech-stack.md](tech-stack.md) | 技术栈选型：候选方案对比、成本、风险、不推荐项 | **未拍板** |
+| [tech-stack.md](tech-stack.md) | 技术栈选型：方案对比、成本、风险、不推荐项 | ✅ 已拍板：方案 A |
 | [open-questions.md](open-questions.md) | 待与客户沟通确认的问题清单，按优先级分类 | 持续更新 |
 
 约定：
