@@ -6,7 +6,21 @@ import { isSanityConfigured } from '@/sanity/env';
 import { hasAsset, urlFor } from '@/sanity/image';
 import { PROJECT_LIST_QUERY } from '@/sanity/queries';
 import { pick, type ProjectListItem } from '@/sanity/types';
+import { languageAlternates } from '@/lib/seo';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({
+  params,
+}: PageProps<'/[locale]/projects'>): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const dict = getDictionary(locale as Locale);
+  return {
+    title: dict.projects.title,
+    alternates: { languages: languageAlternates('/projects') },
+  };
+}
 
 export default async function ProjectsPage({ params }: PageProps<'/[locale]/projects'>) {
   const { locale } = await params;

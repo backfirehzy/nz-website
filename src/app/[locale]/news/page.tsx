@@ -4,8 +4,22 @@ import { sanityFetch } from '@/sanity/client';
 import { isSanityConfigured } from '@/sanity/env';
 import { NEWS_LIST_QUERY } from '@/sanity/queries';
 import { pick, type NewsListItem } from '@/sanity/types';
+import { languageAlternates } from '@/lib/seo';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({
+  params,
+}: PageProps<'/[locale]/news'>): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const dict = getDictionary(locale as Locale);
+  return {
+    title: dict.news.title,
+    alternates: { languages: languageAlternates('/news') },
+  };
+}
 
 export default async function NewsPage({ params }: PageProps<'/[locale]/news'>) {
   const { locale } = await params;

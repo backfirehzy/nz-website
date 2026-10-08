@@ -1,7 +1,29 @@
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionaries';
+import { languageAlternates } from '@/lib/seo';
+import { sanityFetch } from '@/sanity/client';
+import { isSanityConfigured } from '@/sanity/env';
+import { SITE_SETTINGS_QUERY } from '@/sanity/queries';
+import { pick, type SiteSettings } from '@/sanity/types';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({ params }: PageProps<'/[locale]'>): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+
+  const settings = isSanityConfigured
+    ? await sanityFetch<SiteSettings | null>(SITE_SETTINGS_QUERY)
+    : null;
+  const siteName = pick(settings?.siteTitle, locale as Locale) || 'Studio Name';
+
+  return {
+    // 首页标题不带「| 站名」后缀模板
+    title: { absolute: siteName },
+    alternates: { languages: languageAlternates('') },
+  };
+}
 
 export default async function HomePage({ params }: PageProps<'/[locale]'>) {
   const { locale } = await params;

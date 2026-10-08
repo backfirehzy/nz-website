@@ -5,7 +5,21 @@ import { isSanityConfigured } from '@/sanity/env';
 import { hasAsset, urlFor } from '@/sanity/image';
 import { SERVICES_QUERY } from '@/sanity/queries';
 import { pick, type Service } from '@/sanity/types';
+import { languageAlternates } from '@/lib/seo';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({
+  params,
+}: PageProps<'/[locale]/services'>): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const dict = getDictionary(locale as Locale);
+  return {
+    title: dict.services.title,
+    alternates: { languages: languageAlternates('/services') },
+  };
+}
 
 export default async function ServicesPage({ params }: PageProps<'/[locale]/services'>) {
   const { locale } = await params;

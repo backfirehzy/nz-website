@@ -3,9 +3,11 @@ import { sanityFetch } from '@/sanity/client';
 import { isSanityConfigured } from '@/sanity/env';
 import { hasAsset, urlFor } from '@/sanity/image';
 import { PROJECT_DETAIL_QUERY, PROJECT_SLUGS_QUERY } from '@/sanity/queries';
+import { languageAlternates } from '@/lib/seo';
 import { pick, type ProjectDetail } from '@/sanity/types';
 import { VideoEmbed } from '@/components/video-embed';
 import { PortableText } from '@portabletext/react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -15,6 +17,27 @@ export async function generateStaticParams() {
   if (!isSanityConfigured) return [{ slug: 'placeholder' }];
   const slugs = await sanityFetch<{ slug: string }[]>(PROJECT_SLUGS_QUERY);
   return slugs.length > 0 ? slugs.map(({ slug }) => ({ slug })) : [{ slug: 'placeholder' }];
+}
+
+// 详情页 metadata：标题=案例标题，OG 分享卡片=封面图，双语 hreflang 互链。
+export async function generateMetadata({
+  params,
+}: PageProps<'/[locale]/projects/[slug]'>): Promise<Metadata> {
+  const { locale, slug } = await params;
+  if (!isLocale(locale) || !isSanityConfigured) return {};
+
+  const project = await sanityFetch<ProjectDetail | null>(PROJECT_DETAIL_QUERY, { slug });
+  if (!project) return {};
+
+  const coverUrl = hasAsset(project.cover)
+    ? urlFor(project.cover).width(1200).height(630).url()
+    : undefined;
+
+  return {
+    title: pick(project.title, locale as Locale),
+    alternates: { languages: languageAlternates(`/projects/${slug}`) },
+    openGraph: coverUrl ? { images: [{ url: coverUrl, width: 1200, height: 630 }] } : undefined,
+  };
 }
 
 // params/数据读取放在 Suspense 边界内：导航时先返回骨架屏，内容流式补齐（Instant navigation）。

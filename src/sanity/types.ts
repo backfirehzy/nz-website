@@ -38,6 +38,7 @@ export interface NewsDetail extends NewsListItem {
 
 export interface SiteSettings {
   siteTitle?: LocalizedString;
+  seoDescription?: LocalizedString;
   footerText?: LocalizedString;
   contactEmail?: string;
 }

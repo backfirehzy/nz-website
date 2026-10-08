@@ -5,7 +5,21 @@ import { isSanityConfigured } from '@/sanity/env';
 import { hasAsset, urlFor } from '@/sanity/image';
 import { TEAM_QUERY } from '@/sanity/queries';
 import { pick, type TeamMember } from '@/sanity/types';
+import { languageAlternates } from '@/lib/seo';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({
+  params,
+}: PageProps<'/[locale]/team'>): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const dict = getDictionary(locale as Locale);
+  return {
+    title: dict.team.title,
+    alternates: { languages: languageAlternates('/team') },
+  };
+}
 
 export default async function TeamPage({ params }: PageProps<'/[locale]/team'>) {
   const { locale } = await params;
